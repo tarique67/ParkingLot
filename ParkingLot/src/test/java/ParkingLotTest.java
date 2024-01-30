@@ -87,4 +87,13 @@ public class ParkingLotTest {
         String token = lot.park(expectedVehicle);
         assertEquals(expectedVehicle, lot.unpark(token));
     }
+
+    @Test
+    void expectLotEmptyAfterUnparking() {
+        ParkingLot lot = new ParkingLot(1);
+        Vehicle expectedVehicle = new Vehicle("KL098279", "Black");
+        String token = lot.park(expectedVehicle);
+        lot.unpark(token);
+        assertFalse(lot.isFull());
+    }
 }

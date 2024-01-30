@@ -36,7 +36,9 @@ public class Slot {
     public Vehicle unpark(String providedToken){
         if(!providedToken.equals(token))
             throw new IllegalArgumentException();
-        return vehicle;
+        Vehicle vehicleToReturn = this.vehicle;
+        this.vehicle = null;
+        return vehicleToReturn;
     }
 
     public boolean isVehicleParked() {
