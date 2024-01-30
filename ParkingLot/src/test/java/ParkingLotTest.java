@@ -70,21 +70,21 @@ public class ParkingLotTest {
     @Test
     void expectExceptionForUnparkingIfSlotEmpty() {
         ParkingLot lot = new ParkingLot(1);
-        assertThrows(IllegalArgumentException.class, ()-> lot.unpark(UUID.randomUUID().toString(), 0));
+        assertThrows(RuntimeException.class, ()-> lot.unpark(UUID.randomUUID().toString()));
     }
 
     @Test
     void expectExceptionForUnparkingIfTokenDoeNotMatch() {
         ParkingLot lot = new ParkingLot(1);
         lot.park(new Vehicle("KL098279", "Black"));
-        assertThrows(IllegalArgumentException.class, ()-> lot.unpark(UUID.randomUUID().toString(), 0));
+        assertThrows(RuntimeException.class, ()-> lot.unpark(UUID.randomUUID().toString()));
     }
 
     @Test
-    void expectCorrectvehicleForUnparkingIfTokenMatches() {
+    void expectCorrectVehicleForUnparkingIfTokenMatches() {
         ParkingLot lot = new ParkingLot(1);
         Vehicle expectedVehicle = new Vehicle("KL098279", "Black");
         String token = lot.park(expectedVehicle);
-        assertEquals(expectedVehicle, lot.unpark(token, 0));
+        assertEquals(expectedVehicle, lot.unpark(token));
     }
 }

@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 public class ParkingLot {
 
@@ -49,11 +48,19 @@ public class ParkingLot {
         return count;
     }
 
-    public Vehicle unpark(String token, int slot){
-        if(slots[slot] == null)
-            throw new IllegalArgumentException();
-
-        return slots[slot].unpark(token);
+    public Vehicle unpark(String token){
+        Vehicle vehicle = null;
+        int unmatchedCount = 0;
+        for(int i=0; i< slots.length; i++){
+            if(slots[i].tokenMatches(token)){
+                vehicle = slots[i].unpark(token);
+                break;
+            }else{
+                unmatchedCount++;
+            }
+        }
+        if(unmatchedCount == slots.length) throw new RuntimeException();
+        return  vehicle;
     }
 
     @Override
