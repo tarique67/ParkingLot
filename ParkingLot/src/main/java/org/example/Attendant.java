@@ -28,6 +28,22 @@ public class Attendant {
         if(parkingLotsFull>=parkingLots.size()) throw new RuntimeException();
         return token;
     }
+
+    public Vehicle unpark(String token) {
+        Vehicle vehicle = null;
+        int unmatchedCount = 0;
+        for(int i=0; i< parkingLots.size(); i++){
+            try {
+                vehicle = parkingLots.get(i).unpark(token);
+                break;
+            } catch (IllegalArgumentException exception) {
+                unmatchedCount++;
+            }
+        }
+        if(unmatchedCount == parkingLots.size()) throw new RuntimeException();
+        return  vehicle;
+
+    }
 }
 
 
