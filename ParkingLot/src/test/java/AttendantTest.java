@@ -97,7 +97,7 @@ public class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot lot = new ParkingLot(2);
         attendant.assign(lot);
-        attendant.switchStrategy(ParkingStrategy.Farthest);
+        attendant.switchStrategy(ParkingStrategy.FARTHEST);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
         Slot expected = new Slot(0);
 
@@ -109,8 +109,8 @@ public class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot lot = new ParkingLot(2);
         attendant.assign(lot);
-        attendant.switchStrategy(ParkingStrategy.Farthest);
-        attendant.switchStrategy(ParkingStrategy.Nearest);
+        attendant.switchStrategy(ParkingStrategy.FARTHEST);
+        attendant.switchStrategy(ParkingStrategy.NEAREST);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
         Slot expected = new Slot(1);
 
@@ -124,7 +124,7 @@ public class AttendantTest {
         ParkingLot secondLot = new ParkingLot(1);
         attendant.assign(firstLot);
         attendant.assign(secondLot);
-        attendant.switchStrategy(ParkingStrategy.Distributive);
+        attendant.switchStrategy(ParkingStrategy.DISTRIBUTIVE);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
         attendant.park(new Vehicle("JH01BG2341", "RED"));
 
@@ -139,7 +139,7 @@ public class AttendantTest {
         ParkingLot secondLot = new ParkingLot(2);
         attendant.assign(firstLot);
         attendant.assign(secondLot);
-        attendant.switchStrategy(ParkingStrategy.Distributive);
+        attendant.switchStrategy(ParkingStrategy.DISTRIBUTIVE);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
         attendant.park(new Vehicle("JH01BG2341", "RED"));
         attendant.park(new Vehicle("KA01BG2341", "Black"));
@@ -157,7 +157,7 @@ public class AttendantTest {
         attendant.assign(firstLot);
         attendant.assign(secondLot);
         attendant.assign(thirdLot);
-        attendant.switchStrategy(ParkingStrategy.Distributive);
+        attendant.switchStrategy(ParkingStrategy.DISTRIBUTIVE);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
         attendant.park(new Vehicle("JH01BG2341", "RED"));
         attendant.park(new Vehicle("KA01BG6541", "Black"));

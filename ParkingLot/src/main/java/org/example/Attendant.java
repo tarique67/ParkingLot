@@ -6,7 +6,7 @@ import java.util.List;
 public class Attendant {
 
     private List<ParkingLot> parkingLots;
-    private ParkingStrategy parkingStrategy = ParkingStrategy.Nearest;
+    private ParkingStrategy parkingStrategy = ParkingStrategy.NEAREST;
 
     public Attendant() {
         this.parkingLots = new ArrayList<>();
@@ -16,7 +16,7 @@ public class Attendant {
     }
 
     public String park(Vehicle vehicle){
-        Slot slot = this.parkingStrategy.getStrategyBasedSlot(parkingLots);
+        Slot slot = this.parkingStrategy.getSlot(parkingLots);
         if(slot.isVehicleParked()) throw new RuntimeException();
 
         return slot.park(vehicle);

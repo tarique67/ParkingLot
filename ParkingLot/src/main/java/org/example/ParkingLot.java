@@ -27,7 +27,7 @@ public class ParkingLot {
     public String park(Vehicle vehicle, ParkingStrategy strategy) {
         if(isFull())
             throw new IllegalArgumentException();
-        if(strategy == ParkingStrategy.Farthest)
+        if(strategy == ParkingStrategy.FARTHEST)
             return checkFarthestVacant().park(vehicle);
         else
             return checkNearestVacant().park(vehicle);
