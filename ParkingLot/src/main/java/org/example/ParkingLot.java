@@ -15,10 +15,10 @@ public class ParkingLot {
         }
     }
 
-    public int checkNearestVacant(){
+    public Slot checkNearestVacant(){
         for(int i=0; i<slots.length; i++){
             if(!slots[i].isVehicleParked()){
-                return i;
+                return slots[i];
             }
         }
         throw new RuntimeException();
@@ -27,16 +27,16 @@ public class ParkingLot {
     public String park(Vehicle vehicle, ParkingStrategy strategy) {
         if(isFull())
             throw new IllegalArgumentException();
-        if(strategy == ParkingStrategy.Nearest)
-            return slots[checkNearestVacant()].park(vehicle);
+        if(strategy == ParkingStrategy.Farthest)
+            return checkFarthestVacant().park(vehicle);
         else
-            return slots[checkFarthestVacant()].park(vehicle);
+            return checkNearestVacant().park(vehicle);
     }
 
-    public int checkFarthestVacant() {
+    public Slot checkFarthestVacant() {
         for(int i= slots.length-1; i>=0; i--){
             if(!slots[i].isVehicleParked()){
-                return i;
+                return slots[i];
             }
         }
         throw new RuntimeException();
@@ -85,5 +85,13 @@ public class ParkingLot {
     @Override
     public int hashCode() {
         return Arrays.hashCode(slots);
+    }
+
+    public int fullSlots(){
+        int fullSlots = 0;
+        for(Slot slot : slots){
+            fullSlots += slot.isVehicleParked() ? 1 : 0;
+        }
+        return fullSlots;
     }
 }

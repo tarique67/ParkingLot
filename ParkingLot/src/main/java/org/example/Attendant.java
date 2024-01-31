@@ -16,18 +16,10 @@ public class Attendant {
     }
 
     public String park(Vehicle vehicle){
-        int parkingLotsFull = 0;
-        String token = "";
-        for(int i=0; i<parkingLots.size(); i++){
-            if(!parkingLots.get(i).isFull()){
-                token = parkingLots.get(i).park(vehicle, this.parkingStrategy);
-                break;
-            }else{
-                parkingLotsFull++;
-            }
-        }
-        if(parkingLotsFull>=parkingLots.size()) throw new RuntimeException();
-        return token;
+        Slot slot = this.parkingStrategy.getStrategyBasedSlot(parkingLots);
+        if(slot.isVehicleParked()) throw new RuntimeException();
+
+        return slot.park(vehicle);
     }
 
     public Vehicle unpark(String token) {
@@ -45,10 +37,18 @@ public class Attendant {
         return  vehicle;
     }
 
-    public void switchStrategy() {
-        if(this.parkingStrategy==ParkingStrategy.Nearest)
-            this.parkingStrategy = ParkingStrategy.Farthest;
-        else
-            this.parkingStrategy = ParkingStrategy.Nearest;
+    public void switchStrategy(ParkingStrategy strategy) {
+        this.parkingStrategy = strategy;
+    }
+
+    private int firstMinFullLot(){
+        int minLotIndex = 0 ;
+        for(int i=0; i<parkingLots.size(); i++){
+            if(parkingLots.get(i).fullSlots()<parkingLots.get(minLotIndex).fullSlots()){
+                minLotIndex = i;
+                break;
+            }
+        }
+        return minLotIndex;
     }
 }

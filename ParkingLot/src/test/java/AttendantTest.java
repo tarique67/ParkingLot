@@ -1,6 +1,4 @@
-import org.example.Attendant;
-import org.example.ParkingLot;
-import org.example.Vehicle;
+import org.example.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,9 +97,9 @@ public class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot lot = new ParkingLot(2);
         attendant.assign(lot);
-        attendant.switchStrategy();
+        attendant.switchStrategy(ParkingStrategy.Farthest);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
-        int expected = 0;
+        Slot expected = new Slot(0);
 
         assertEquals(expected, lot.checkNearestVacant() );
     }
@@ -111,11 +109,62 @@ public class AttendantTest {
         Attendant attendant = new Attendant();
         ParkingLot lot = new ParkingLot(2);
         attendant.assign(lot);
-        attendant.switchStrategy();
-        attendant.switchStrategy();
+        attendant.switchStrategy(ParkingStrategy.Farthest);
+        attendant.switchStrategy(ParkingStrategy.Nearest);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
-        int expected = 1;
+        Slot expected = new Slot(1);
 
         assertEquals(expected, lot.checkNearestVacant() );
+    }
+
+    @Test
+    void expect1CarEachToBeParkedInTwoLotsByAttendant() {
+        Attendant attendant = new Attendant();
+        ParkingLot firstLot = new ParkingLot(2);
+        ParkingLot secondLot = new ParkingLot(1);
+        attendant.assign(firstLot);
+        attendant.assign(secondLot);
+        attendant.switchStrategy(ParkingStrategy.Distributive);
+        attendant.park(new Vehicle("AP03HG23311", "RED"));
+        attendant.park(new Vehicle("JH01BG2341", "RED"));
+
+        assertTrue(secondLot.isFull());
+        assertFalse(firstLot.isFull());
+    }
+
+    @Test
+    void expect2CarInLot1And1InLot2EachToBeParkedInTwoLotsByAttendant() {
+        Attendant attendant = new Attendant();
+        ParkingLot firstLot = new ParkingLot(2);
+        ParkingLot secondLot = new ParkingLot(2);
+        attendant.assign(firstLot);
+        attendant.assign(secondLot);
+        attendant.switchStrategy(ParkingStrategy.Distributive);
+        attendant.park(new Vehicle("AP03HG23311", "RED"));
+        attendant.park(new Vehicle("JH01BG2341", "RED"));
+        attendant.park(new Vehicle("KA01BG2341", "Black"));
+
+        assertFalse(secondLot.isFull());
+        assertTrue(firstLot.isFull());
+    }
+
+    @Test
+    void expect3rdAnd1stLotFull2ndLotNotFullWhen4CarsParkedByAttendantInDistributiveStrategy() {
+        Attendant attendant = new Attendant();
+        ParkingLot firstLot = new ParkingLot(2);
+        ParkingLot secondLot = new ParkingLot(2);
+        ParkingLot thirdLot = new ParkingLot(1);
+        attendant.assign(firstLot);
+        attendant.assign(secondLot);
+        attendant.assign(thirdLot);
+        attendant.switchStrategy(ParkingStrategy.Distributive);
+        attendant.park(new Vehicle("AP03HG23311", "RED"));
+        attendant.park(new Vehicle("JH01BG2341", "RED"));
+        attendant.park(new Vehicle("KA01BG6541", "Black"));
+        attendant.park(new Vehicle("MH01BG4441", "Black"));
+
+        assertFalse(secondLot.isFull());
+        assertTrue(firstLot.isFull());
+        assertTrue(thirdLot.isFull());
     }
 }

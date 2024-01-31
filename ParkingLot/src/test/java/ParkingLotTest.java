@@ -1,5 +1,6 @@
 import org.example.ParkingLot;
 import org.example.ParkingStrategy;
+import org.example.Slot;
 import org.example.Vehicle;
 import org.junit.jupiter.api.Test;
 
@@ -18,13 +19,13 @@ public class ParkingLotTest {
 
     @Test
     void expect0ForNearestVacantParkingSlotWhenNoVehiclesParked() {
-        int expected = 0;
+        Slot expected = new Slot(0);
         assertEquals(expected, new ParkingLot(10).checkNearestVacant());
     }
 
     @Test
     void expect2ForFarthestVacantParkingSlotWhenNoVehiclesParked() {
-        int expected = 2;
+        Slot expected = new Slot(2);
         assertEquals(expected, new ParkingLot(3).checkFarthestVacant());
     }
 
@@ -105,10 +106,10 @@ public class ParkingLotTest {
     }
 
     @Test
-    void expectNearestVacant0IfParkedWithStrategyFarthest() {
-        int expected = 0;
+    void expect1FullSlotIf1VehicleParked() {
+        int expected = 1;
         ParkingLot lot = new ParkingLot(10);
         lot.park(new Vehicle("JK02GH9981", "White"), ParkingStrategy.Farthest);
-        assertEquals(expected, lot.checkNearestVacant());
+        assertEquals(expected, lot.fullSlots());
     }
 }

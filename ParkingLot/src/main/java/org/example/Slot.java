@@ -15,7 +15,7 @@ public class Slot {
     }
 
     public String park(Vehicle vehicle){
-        if(this.vehicle != null)
+        if(isVehicleParked())
             throw new RuntimeException();
         String token = UUID.randomUUID().toString();
         this.vehicle = vehicle;
