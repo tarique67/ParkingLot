@@ -1,4 +1,5 @@
 import org.example.ParkingLot;
+import org.example.ParkingStrategy;
 import org.example.Vehicle;
 import org.junit.jupiter.api.Test;
 
@@ -16,36 +17,42 @@ public class ParkingLotTest {
     }
 
     @Test
-    void expect0ForNearestVacantParkingLotWhenNoVehiclesParked() {
+    void expect0ForNearestVacantParkingSlotWhenNoVehiclesParked() {
         int expected = 0;
         assertEquals(expected, new ParkingLot(10).checkNearestVacant());
     }
 
     @Test
+    void expect2ForFarthestVacantParkingSlotWhenNoVehiclesParked() {
+        int expected = 2;
+        assertEquals(expected, new ParkingLot(3).checkFarthestVacant());
+    }
+
+    @Test
     void expectNoExceptionWhileParkingIfVacantSlotsAvailable() {
         ParkingLot lot = new ParkingLot(10);
-        assertDoesNotThrow( ()-> lot.park(new Vehicle("JH01Bk2241", "White")));
+        assertDoesNotThrow( ()-> lot.park(new Vehicle("JH01Bk2241", "White"), ParkingStrategy.Nearest));
     }
 
     @Test
     void expectTrueWhenCheckingIsParkingLotFullIfAllSlotsOccupied() {
         ParkingLot lot = new ParkingLot(1);
-        lot.park(new Vehicle("JH01Bk2241", "White"));
+        lot.park(new Vehicle("JH01Bk2241", "White"), ParkingStrategy.Nearest);
         assertTrue(lot.isFull());
     }
 
     @Test
     void expectFalseWhenCheckingIsParkingLotFullIfAllSlotsNotOccupied() {
         ParkingLot lot = new ParkingLot(2);
-        lot.park(new Vehicle("JH01Bk2241", "White"));
+        lot.park(new Vehicle("JH01Bk2241", "White"), ParkingStrategy.Nearest);
         assertFalse(lot.isFull());
     }
 
     @Test
     void expectExceptionWhileParkingIfNoVacantSlotsAvailable() {
         ParkingLot lot = new ParkingLot(1);
-        lot.park(new Vehicle("DL03BN0098", "Black"));
-        assertThrows(IllegalArgumentException.class, ()-> lot.park(new Vehicle("JH01Bk2241", "White")));
+        lot.park(new Vehicle("DL03BN0098", "Black"), ParkingStrategy.Nearest);
+        assertThrows(IllegalArgumentException.class, ()-> lot.park(new Vehicle("JH01Bk2241", "White"), ParkingStrategy.Nearest));
     }
 
 
@@ -53,7 +60,7 @@ public class ParkingLotTest {
     void expect1ForBlackCarsWhileCheckingCarsOfBlackColor() {
         int expected = 1;
         ParkingLot lot = new ParkingLot(10);
-        lot.park(new Vehicle("KL098273", "Black"));
+        lot.park(new Vehicle("KL098273", "Black"), ParkingStrategy.Nearest);
         assertEquals(expected, lot.countVehiclesOfColor("Black"));
     }
 
@@ -61,9 +68,9 @@ public class ParkingLotTest {
     void expect3ForBlackCarsWhileCheckingCarsOfBlackColor() {
         int expected = 3;
         ParkingLot lot = new ParkingLot(10);
-        lot.park(new Vehicle("KL098273", "Black"));
-        lot.park(new Vehicle("KL098275", "Black"));
-        lot.park(new Vehicle("KL098279", "Black"));
+        lot.park(new Vehicle("KL098273", "Black"), ParkingStrategy.Nearest);
+        lot.park(new Vehicle("KL098275", "Black"), ParkingStrategy.Nearest);
+        lot.park(new Vehicle("KL098279", "Black"), ParkingStrategy.Nearest);
         assertEquals(expected, lot.countVehiclesOfColor("Black"));
     }
 
@@ -76,7 +83,7 @@ public class ParkingLotTest {
     @Test
     void expectExceptionForUnparkingIfTokenDoeNotMatch() {
         ParkingLot lot = new ParkingLot(1);
-        lot.park(new Vehicle("KL098279", "Black"));
+        lot.park(new Vehicle("KL098279", "Black"), ParkingStrategy.Nearest);
         assertThrows(RuntimeException.class, ()-> lot.unpark(UUID.randomUUID().toString()));
     }
 
@@ -84,7 +91,7 @@ public class ParkingLotTest {
     void expectCorrectVehicleForUnparkingIfTokenMatches() {
         ParkingLot lot = new ParkingLot(1);
         Vehicle expectedVehicle = new Vehicle("KL098279", "Black");
-        String token = lot.park(expectedVehicle);
+        String token = lot.park(expectedVehicle, ParkingStrategy.Nearest);
         assertEquals(expectedVehicle, lot.unpark(token));
     }
 
@@ -92,8 +99,16 @@ public class ParkingLotTest {
     void expectLotEmptyAfterUnparking() {
         ParkingLot lot = new ParkingLot(1);
         Vehicle expectedVehicle = new Vehicle("KL098279", "Black");
-        String token = lot.park(expectedVehicle);
+        String token = lot.park(expectedVehicle, ParkingStrategy.Nearest);
         lot.unpark(token);
         assertFalse(lot.isFull());
+    }
+
+    @Test
+    void expectNearestVacant0IfParkedWithStrategyFarthest() {
+        int expected = 0;
+        ParkingLot lot = new ParkingLot(10);
+        lot.park(new Vehicle("JK02GH9981", "White"), ParkingStrategy.Farthest);
+        assertEquals(expected, lot.checkNearestVacant());
     }
 }

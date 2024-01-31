@@ -21,14 +21,25 @@ public class ParkingLot {
                 return i;
             }
         }
-        return -1;
+        throw new RuntimeException();
     }
 
-    public String park(Vehicle vehicle) {
+    public String park(Vehicle vehicle, ParkingStrategy strategy) {
         if(isFull())
             throw new IllegalArgumentException();
-        int slotNumber = checkNearestVacant();
-        return slots[slotNumber].park(vehicle);
+        if(strategy == ParkingStrategy.Nearest)
+            return slots[checkNearestVacant()].park(vehicle);
+        else
+            return slots[checkFarthestVacant()].park(vehicle);
+    }
+
+    public int checkFarthestVacant() {
+        for(int i= slots.length-1; i>=0; i--){
+            if(!slots[i].isVehicleParked()){
+                return i;
+            }
+        }
+        throw new RuntimeException();
     }
 
     public boolean isFull() {

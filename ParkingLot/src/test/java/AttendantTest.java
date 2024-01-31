@@ -93,4 +93,29 @@ public class AttendantTest {
 
         assertThrows(RuntimeException.class, ()-> secondAttendant.unpark(firstToken));
     }
+
+    @Test
+    void expectNearestVacant0AfterOneSwitchOfParkingStrategy() {
+        Attendant attendant = new Attendant();
+        ParkingLot lot = new ParkingLot(2);
+        attendant.assign(lot);
+        attendant.switchStrategy();
+        attendant.park(new Vehicle("AP03HG23311", "RED"));
+        int expected = 0;
+
+        assertEquals(expected, lot.checkNearestVacant() );
+    }
+
+    @Test
+    void expectNearestVacant1AfterTwoSwitchOfParkingStrategy() {
+        Attendant attendant = new Attendant();
+        ParkingLot lot = new ParkingLot(2);
+        attendant.assign(lot);
+        attendant.switchStrategy();
+        attendant.switchStrategy();
+        attendant.park(new Vehicle("AP03HG23311", "RED"));
+        int expected = 1;
+
+        assertEquals(expected, lot.checkNearestVacant() );
+    }
 }

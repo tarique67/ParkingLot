@@ -6,6 +6,7 @@ import java.util.List;
 public class Attendant {
 
     private List<ParkingLot> parkingLots;
+    private ParkingStrategy parkingStrategy = ParkingStrategy.Nearest;
 
     public Attendant() {
         this.parkingLots = new ArrayList<>();
@@ -19,7 +20,7 @@ public class Attendant {
         String token = "";
         for(int i=0; i<parkingLots.size(); i++){
             if(!parkingLots.get(i).isFull()){
-                token = parkingLots.get(i).park(vehicle);
+                token = parkingLots.get(i).park(vehicle, this.parkingStrategy);
                 break;
             }else{
                 parkingLotsFull++;
@@ -42,6 +43,12 @@ public class Attendant {
         }
         if(unmatchedCount == parkingLots.size()) throw new RuntimeException();
         return  vehicle;
+    }
 
+    public void switchStrategy() {
+        if(this.parkingStrategy==ParkingStrategy.Nearest)
+            this.parkingStrategy = ParkingStrategy.Farthest;
+        else
+            this.parkingStrategy = ParkingStrategy.Nearest;
     }
 }
