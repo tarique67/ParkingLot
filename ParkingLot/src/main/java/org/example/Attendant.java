@@ -3,7 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Attendant {
+public class Attendant implements Observer{
 
     private List<ParkingLot> parkingLots;
     private ParkingStrategy parkingStrategy = ParkingStrategy.NEAREST;

@@ -8,6 +8,7 @@ public class VehicleTest {
     @Test
     void expectTrueWhenEquatingTwoSameVehicles() {
         Vehicle vehicle = new Vehicle("JH015564","White");
+
         assertEquals(vehicle, new Vehicle("JH015564", "White"));
     }
 

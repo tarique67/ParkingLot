@@ -27,10 +27,18 @@ public class ParkingLot {
     public String park(Vehicle vehicle, ParkingStrategy strategy) {
         if(isFull())
             throw new IllegalArgumentException();
-        if(strategy == ParkingStrategy.FARTHEST)
-            return checkFarthestVacant().park(vehicle);
-        else
-            return checkNearestVacant().park(vehicle);
+        if(strategy == ParkingStrategy.FARTHEST){
+            String token = checkFarthestVacant().park(vehicle);
+            if(this.isFull())
+                NotificationBus.getInstance().publish(this, ParkingLotEvent.FULL);
+            return token;
+        } else{
+            String token = checkNearestVacant().park(vehicle);
+            if(this.isFull())
+                NotificationBus.getInstance().publish(this, ParkingLotEvent.FULL);
+            return token;
+        }
+
     }
 
     public Slot checkFarthestVacant() {
@@ -65,6 +73,9 @@ public class ParkingLot {
         for(int i=0; i< slots.length; i++){
             if(slots[i].tokenMatches(token)){
                 vehicle = slots[i].unpark(token);
+                if(!this.isFull()){
+                    NotificationBus.getInstance().publish(this, ParkingLotEvent.EMPTY);
+                }
                 break;
             }else{
                 unmatchedCount++;
