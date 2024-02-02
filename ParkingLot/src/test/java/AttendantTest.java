@@ -88,7 +88,7 @@ public class AttendantTest {
     }
 
     @Test
-    void expectExceptionIfAttendantWithDifferentParkingLotAssignedTriesToUnparkFromDifferenParkingLot() {
+    void expectExceptionIfAttendantWithDifferentParkingLotAssignedTriesToUnparkFromDifferentParkingLot() {
         Attendant firstAttendant = new Attendant();
         Attendant secondAttendant = new Attendant();
         ParkingLot firstLot = new ParkingLot(1);
@@ -102,7 +102,7 @@ public class AttendantTest {
     }
 
     @Test
-    void expectNearestVacant0AfterOneSwitchOfParkingStrategy() {
+    void expectNearestVacant1AfterOneSwitchOfParkingStrategy() {
         Attendant attendant = new Attendant();
         ParkingLot lot = new ParkingLot(2);
         attendant.assign(lot);
@@ -116,11 +116,13 @@ public class AttendantTest {
     @Test
     void expectNearestVacant1AfterTwoSwitchOfParkingStrategy() {
         Attendant attendant = new Attendant();
-        ParkingLot lot = new ParkingLot(2);
+        ParkingLot lot = new ParkingLot(3);
         attendant.assign(lot);
         attendant.switchStrategy(ParkingStrategy.FARTHEST);
-        attendant.switchStrategy(ParkingStrategy.NEAREST);
         attendant.park(new Vehicle("AP03HG23311", "RED"));
+
+        attendant.switchStrategy(ParkingStrategy.NEAREST);
+        attendant.park(new Vehicle("KA03GG24311", "RED"));
         Slot expected = new Slot(1);
 
         assertEquals(expected, lot.checkNearestVacant() );
@@ -143,7 +145,7 @@ public class AttendantTest {
     }
 
     @Test
-    void expect2CarInLot1And1InLot2EachToBeParkedInTwoLotsByAttendant() {
+    void expect2CarInLot1And2EachToBeParkedByAttendant() {
         Attendant attendant = new Attendant();
         ParkingLot firstLot = new ParkingLot(2);
         ParkingLot secondLot = new ParkingLot(2);
@@ -183,20 +185,20 @@ public class AttendantTest {
     @Test
     void expectAttendantNotifiedWhenParkingLotFull() {
         ParkingLot lot = new ParkingLot(1);
-        Observer observer = mock(Attendant.class);
-        NotificationBus.getInstance().subscribe(observer, ParkingLotEvent.FULL);
+        Observer attendant = mock(Attendant.class);
+        NotificationBus.getInstance().subscribe(attendant, ParkingLotEvent.FULL);
         Vehicle vehicle = new Vehicle("JK09Bh9876", "Red");
 
         lot.park(vehicle);
 
-        verify(observer).notify(ParkingLotEvent.FULL, lot);
+        verify(attendant).notify(ParkingLotEvent.FULL, lot);
     }
 
     @Test
     void expectAttendantNotifiedWhenParkingLotHasEmptySlot() {
         ParkingLot lot = new ParkingLot(2);
-        Observer observer = mock(Attendant.class);
-        NotificationBus.getInstance().subscribe(observer, ParkingLotEvent.EMPTY);
+        Observer attendant = mock(Attendant.class);
+        NotificationBus.getInstance().subscribe(attendant, ParkingLotEvent.EMPTY);
         Vehicle vehicle = new Vehicle("JK09Bh9876", "Red");
         Vehicle vehicle2 = new Vehicle("JK09Bh9876", "Red");
         String token1 = lot.park(vehicle);
@@ -204,6 +206,8 @@ public class AttendantTest {
 
         lot.unpark(token1);
 
-        verify(observer).notify(ParkingLotEvent.EMPTY, lot);
+        verify(attendant).notify(ParkingLotEvent.EMPTY, lot);
     }
+
+
 }
