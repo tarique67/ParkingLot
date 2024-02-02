@@ -187,7 +187,7 @@ public class AttendantTest {
         NotificationBus.getInstance().subscribe(observer, ParkingLotEvent.FULL);
         Vehicle vehicle = new Vehicle("JK09Bh9876", "Red");
 
-        lot.park(vehicle, ParkingStrategy.NEAREST);
+        lot.park(vehicle);
 
         verify(observer).notify(ParkingLotEvent.FULL, lot);
     }
@@ -199,8 +199,8 @@ public class AttendantTest {
         NotificationBus.getInstance().subscribe(observer, ParkingLotEvent.EMPTY);
         Vehicle vehicle = new Vehicle("JK09Bh9876", "Red");
         Vehicle vehicle2 = new Vehicle("JK09Bh9876", "Red");
-        String token1 = lot.park(vehicle, ParkingStrategy.NEAREST);
-        String token2 = lot.park(vehicle2, ParkingStrategy.NEAREST);
+        String token1 = lot.park(vehicle);
+        String token2 = lot.park(vehicle2);
 
         lot.unpark(token1);
 

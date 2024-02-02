@@ -24,21 +24,15 @@ public class ParkingLot {
         throw new RuntimeException();
     }
 
-    public String park(Vehicle vehicle, ParkingStrategy strategy) {
+    public String park(Vehicle vehicle) {
         if(isFull())
             throw new IllegalArgumentException();
-        if(strategy == ParkingStrategy.FARTHEST){
-            String token = checkFarthestVacant().park(vehicle);
-            if(this.isFull())
-                NotificationBus.getInstance().publish(this, ParkingLotEvent.FULL);
-            return token;
-        } else{
-            String token = checkNearestVacant().park(vehicle);
-            if(this.isFull())
-                NotificationBus.getInstance().publish(this, ParkingLotEvent.FULL);
-            return token;
-        }
 
+        String token = checkNearestVacant().park(vehicle);
+
+        if(this.isFull())
+                NotificationBus.getInstance().publish(this, ParkingLotEvent.FULL);
+        return token;
     }
 
     public Slot checkFarthestVacant() {
